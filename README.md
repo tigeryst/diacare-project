@@ -4,13 +4,16 @@ Welcome to the Diacare App project! Follow these instructions to set up your dev
 
 ## Setup Instructions
 
-### Step 1: Open the Terminal in VS Code
+### Step 1: Install recommended extensions
 
-1. Open Visual Studio Code.
+1. While waiting for the GitHub Codespace to finish setting up, install the recommended Visual Studio Code extensions by clicking on the Extensions icon in the Activity Bar on the left then the small cloud icon to install all recommended extensions.
+
+### Step 2: Open the Terminal in VS Code
+
 1. Open the Command Palette by pressing `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (Mac).
 1. Type "Terminal: Create New Terminal" and select it. This will open a terminal window at the bottom of VS Code.
 
-### Step 2: Navigate to the Project Directory
+### Step 3: Navigate to the Project Directory
 
 In the terminal, navigate to the project directory by running:
 
@@ -20,7 +23,7 @@ cd /workspaces/diacare-project
 
 Replace /workspaces/diacare-project with the path to your project directory if it's different.
 
-### Step 3: Set Up a New Virtual Environment
+### Step 4: Set Up a New Virtual Environment
 
 Create a new virtual environment named venv by running:
 
@@ -28,7 +31,7 @@ Create a new virtual environment named venv by running:
 python -m venv venv
 ```
 
-### Step 4: Activate the Virtual Environment
+### Step 5: Activate the Virtual Environment
 
 Activate the virtual environment:
 
@@ -41,13 +44,17 @@ Activate the virtual environment:
   source venv/bin/activate
   ```
 
-### Step 5: Install Dependencies
+### Step 6: Install Dependencies
 
-With the virtual environment activated, install the project dependencies from the requirements.txt file by running:
+> **IMPORTANT**: Make sure you have the virutal environment activated!
+
+Install the project dependencies from the requirements.txt file by running:
 
 ```sh
 pip install -r requirements.txt
 ```
+
+This should install streamlit as well as pandas, numpy, and scikit-learn for you. Feel free to pip install any other dependencies.
 
 ## Writing and Running Your First Python Script
 
