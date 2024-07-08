@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "vscode-icons-team.vscode-icons",
+    "esbenp.prettier-vscode"
+  ]
+}

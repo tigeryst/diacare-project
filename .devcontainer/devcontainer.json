@@ -1,0 +1,13 @@
+{
+  "name": "Diacare Dev Container",
+  "image": "mcr.microsoft.com/vscode/devcontainers/python:3",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "remoteUser": "vscode"
+}
