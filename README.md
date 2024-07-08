@@ -28,7 +28,7 @@ Replace /workspaces/diacare-project with the path to your project directory if i
 Create a new virtual environment named venv by running:
 
 ```sh
-python -m venv venv
+virtualenv venv
 ```
 
 ### Step 5: Activate the Virtual Environment

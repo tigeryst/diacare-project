@@ -1,11 +1,6 @@
 {
   "name": "Diacare Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/python:3.10",
-  "features": {
-    "ghcr.io/devcontainers/features/pyenv:1": {
-      "version": "3.10.0"
-    }
-  },
-  "postCreateCommand": "./.devcontainer/setup.sh",
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "postCreateCommand": "bash -c './.devcontainer/setup.sh'",
   "remoteUser": "vscode"
 }
