@@ -9,7 +9,7 @@ echo "Homebrew installation completed."
 
 # Add Homebrew to PATH
 echo "Adding Homebrew to PATH..."
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.profile
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> $HOME/.bashrc
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 echo "Homebrew added to PATH."
 
