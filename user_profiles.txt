@@ -1,0 +1,104 @@
+2024-07-19 09:02:30.215742
+Name: John
+Age: 25
+Sex: Male
+Height: 170
+Weight: 70
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-19 09:51:01.619501
+Name: John
+Age: 25
+Sex: Male
+Height: 170
+Weight: 75
+Activity Level: Moderately active (moderate exercise/sports 3-5 days/week)
+
+2024-07-19 09:59:04.803597
+Name: John
+Age: 25
+Sex: Male
+Height: 170
+Weight: 78
+Activity Level: Moderately active (moderate exercise/sports 3-5 days/week)
+
+2024-07-19 10:21:38.480415
+Name: john
+Age: 10
+Sex: Male
+Height: 150
+Weight: 50
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-19 12:45:09.112305
+Name: 
+Age: 70
+Sex: Male
+Height: 168
+Weight: 50
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-19 13:00:12.856892
+Name: 
+Age: 70
+Sex: Male
+Height: 168
+Weight: 50
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-19 13:00:42.176459
+Name: 
+Age: 70
+Sex: Male
+Height: 168
+Weight: 50
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-19 13:06:20.472186
+Name: 
+Age: 70
+Sex: Male
+Height: 168
+Weight: 50
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-20 07:30:20.210811
+Name: John
+Age: 20
+Sex: Male
+Height: 175
+Weight: 80
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-20 07:30:20.854497
+Name: John
+Age: 20
+Sex: Male
+Height: 175
+Weight: 80
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-20 07:40:13.246128
+Name: John
+Age: 20
+Sex: Male
+Height: 175
+Weight: 80
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-20 07:40:44.376767
+Name: John
+Age: 20
+Sex: Male
+Height: 175
+Weight: 80
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-20 07:53:50.070459
+Name: Tom
+Age: 30
+Sex: Male
+Height: 175
+Weight: 80
+Activity Level: Sedentary (little or no exercise)
+
