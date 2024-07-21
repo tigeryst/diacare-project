@@ -1,7 +1,11 @@
 import openai
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Set your OpenAI API key
-openai.api_key = 'sk-proj-s4ThvdJJBj458bJt3wQRT3BlbkFJIZutaaw7uDWEPBoNgcJD'
+openai.api_key = os.getenv("OPEN_API_KEY")
+
 
 def get_meal_recipe(profile, calorie_needs):
     # Define the prompt for the API

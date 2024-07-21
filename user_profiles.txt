@@ -102,3 +102,19 @@ Height: 175
 Weight: 80
 Activity Level: Sedentary (little or no exercise)
 
+2024-07-21 04:30:39.563842
+Name: 
+Age: 15
+Sex: Male
+Height: 150
+Weight: 50
+Activity Level: Sedentary (little or no exercise)
+
+2024-07-21 04:33:53.343707
+Name: 
+Age: 30
+Sex: Male
+Height: 180
+Weight: 85
+Activity Level: Lightly active (light exercise/sports 1-3 days/week)
+

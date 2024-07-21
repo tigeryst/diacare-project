@@ -2,9 +2,11 @@ import streamlit as st
 import os
 from datetime import datetime
 import openai
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set your OpenAI API key
-openai.api_key = 'sk-proj-s4ThvdJJBj458bJt3wQRT3BlbkFJIZutaaw7uDWEPBoNgcJD'
+openai.api_key = os.getenv("OPEN_API_KEY")
 
 def get_meal_recipe(profile, calorie_needs):
     # Define the prompt for the API
@@ -82,9 +84,8 @@ st.header("Results")
 st.write(f"Estimated BMR: {bmr:.2f} calories/day")
 st.write(f"Estimated Daily Calorie Needs: {daily_calorie_needs:.2f} calories/day")
 
-# Get meal recipe from ChatGPT
- Meal Recipe"):
-    profile = {if st.button("Get
+if st.button("Get Meal Recipe"):
+    profile = {
         "name": name,
         "age": age,
         "sex": sex,
@@ -95,6 +96,5 @@ st.write(f"Estimated Daily Calorie Needs: {daily_calorie_needs:.2f} calories/day
     st.header("Personalized Meal Recipe")
     meal_recipe = get_meal_recipe(profile, daily_calorie_needs)
     st.write(meal_recipe)
-
 
 
