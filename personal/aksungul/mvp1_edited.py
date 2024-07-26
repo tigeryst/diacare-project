@@ -87,18 +87,6 @@ def main():
         st.header("Register")
         username = st.text_input("Username:")
         password = st.text_input("Password:", type="password")
-        name = st.text_input("**Name:**")
-        age = st.number_input("**Age:**", min_value=0, max_value=120, value=10)
-        sex = st.selectbox("**Sex:**", ["Male", "Female"])
-        height = st.number_input("**Height (cm):**", min_value=0, max_value=300, value=150)
-        weight = st.number_input("**Weight (kg):**", min_value=0, max_value=300, value=50)
-        activity_level = st.selectbox("**Daily Activity Level:**", [
-            "Sedentary (little or no exercise)",
-            "Lightly active (light exercise/sports 1-3 days/week)",
-            "Moderately active (moderate exercise/sports 3-5 days/week)",
-            "Very active (hard exercise/sports 6-7 days a week)",
-            "Super active (very hard exercise/sports & physical job or 2x training)"
-        ])
         if st.button("Register"):
             if not os.path.exists("user_profiles"):
                 os.makedirs("user_profiles")
@@ -108,14 +96,7 @@ def main():
                 with open(f"user_profiles/{username}.txt", "w") as file:
                     file.write(f"Username: {username}\n")
                     file.write(f"Password: {hash_password(password)}\n")
-                    file.write(f"Name: {name}\n")
-                    file.write(f"Age: {age}\n")
-                    file.write(f"Sex: {sex}\n")
-                    file.write(f"Height: {height}\n")
-                    file.write(f"Weight: {weight}\n")
-                    file.write(f"Activity Level: {activity_level}\n")
                 st.success("Registration successful! Please proceed to login.")
-                st.experimental_rerun()
 
     elif page == "Login":
         st.header("Login")
@@ -126,7 +107,6 @@ def main():
                 st.success("Login successful!")
                 st.session_state["logged_in"] = True
                 st.session_state["username"] = username
-                st.experimental_rerun()
             else:
                 st.error("Invalid username or password.")
 
@@ -136,22 +116,21 @@ def main():
         else:
             st.header("Generate Recipe")
 
-            username = st.session_state["username"]
-            with open(f"user_profiles/{username}.txt", "r") as file:
-                lines = file.readlines()
-                name = lines[2].strip().split(": ")[1]
-                age = int(lines[3].strip().split(": ")[1])
-                sex = lines[4].strip().split(": ")[1]
-                height = int(lines[5].strip().split(": ")[1])
-                weight = int(lines[6].strip().split(": ")[1])
-                activity_level = lines[7].strip().split(": ")[1]
+            # User profile input
+            name = st.text_input("**Name:**")
+            age = st.number_input("**Age:**", min_value=0, max_value=120, value=10)
+            sex = st.selectbox("**Sex:**", ["Male", "Female"])
+            height = st.number_input("**Height (cm):**", min_value=0, max_value=300, value=150)
+            weight = st.number_input("**Weight (kg):**", min_value=0, max_value=300, value=50)
 
-            st.write(f"Name: {name}")
-            st.write(f"Age: {age}")
-            st.write(f"Sex: {sex}")
-            st.write(f"Height: {height} cm")
-            st.write(f"Weight: {weight} kg")
-            st.write(f"Activity Level: {activity_level}")
+            # Daily activity level input
+            activity_level = st.selectbox("**Daily Activity Level:**", [
+                "Sedentary (little or no exercise)",
+                "Lightly active (light exercise/sports 1-3 days/week)",
+                "Moderately active (moderate exercise/sports 3-5 days/week)",
+                "Very active (hard exercise/sports 6-7 days a week)",
+                "Super active (very hard exercise/sports & physical job or 2x training)"
+            ])
 
             # Additional user preferences
             food_preference = st.text_input("**Food Preference:** (e.g., vegan, vegetarian, gluten-free)")
@@ -159,17 +138,24 @@ def main():
             cuisine = st.text_input("**Cuisine Preference:** (e.g., Italian, Chinese, Indian)")
             category = st.text_input("**Meal Category:** (e.g., breakfast, lunch, dinner)")
 
-            # Image upload for ingredient recognition or manual input
-            option = st.selectbox("Would you like to upload an image of ingredients or enter them manually?", ["Upload Image", "Enter Manually"])
+            # Image upload for ingredient recognition
+            uploaded_file = st.file_uploader("**Upload an image of ingredients:**", type=["jpg", "jpeg", "png"])
             ingredients = None
-            if option == "Upload Image":
-                uploaded_file = st.file_uploader("**Upload an image of ingredients:**", type=["jpg", "jpeg", "png"])
-                if uploaded_file is not None:
-                    image = Image.open(uploaded_file)
-                    st.image(image, caption="Uploaded Ingredients", use_column_width=True)
-                    ingredients = get_ingredients_from_image(image)
-            else:
-                ingredients = st.text_input("**Enter ingredients you have at home:**")
+            if uploaded_file is not None:
+                image = Image.open(uploaded_file)
+                st.image(image, caption="Uploaded Ingredients", use_column_width=True)
+                ingredients = get_ingredients_from_image(image)
+
+            # Store input in local text file
+            if st.button("Save Profile"):
+                profile_data = (
+                    f"{datetime.now()}\nName: {name}\nAge: {age}\nSex: {sex}\nHeight: {height}\nWeight: {weight}\n"
+                    f"Activity Level: {activity_level}\nFood Preference: {food_preference}\nNationality: {nationality}\n"
+                    f"Cuisine: {cuisine}\nCategory: {category}\n\n"
+                )
+                with open(f"user_profiles/{st.session_state['username']}.txt", "a") as file:
+                    file.write(profile_data)
+                st.success("***Profile saved successfully!***")
 
             # Calculate BMR and daily calorie needs
             bmr = calculate_bmr(weight, height, age, sex)
@@ -191,5 +177,9 @@ def main():
                 }
                 st.header("Personalized Meal Recipe")
                 meal_recipe = get_meal_recipe(profile, daily_calorie_needs, food_preference, nationality, cuisine, category, ingredients)
+                st.write(meal_recipe)
+                st.image("path_to_image_of_recipe.jpg", caption="Recipe Image", use_column_width=True)  # Placeholder image path
+                st.image("path_to_image_of_cooking_process.jpg", caption="Cooking Process", use_column_width=True)  # Placeholder image path
 
-
+if __name__ == "__main__":
+    main()

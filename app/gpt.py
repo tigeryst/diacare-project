@@ -28,9 +28,8 @@ def get_meal_recipe(profile, calorie_needs):
     # Extract and return the response text
     return response.choices[0].message['content'].strip()
 
-# Get meal recipe from ChatGPT
- Meal Recipe"):
-    profile = {if st.button("Get
+if st.button("Get Meal Recipe"):
+    profile = {
         "name": name,
         "age": age,
         "sex": sex,
