@@ -9,6 +9,7 @@ def generate_recipe(user_data):
         max_tokens=None,
         timeout=None,
         max_retries=2,
+        # The API key is loaded from the environment variable OPENAI_API_KEY
     )
     messages = [
         (
