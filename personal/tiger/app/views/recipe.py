@@ -13,9 +13,11 @@ def render():
 
     user_data = user_service.get_user(st.session_state["email"])
 
+    user_prompt = st.text_input("What kind of food do you want to have today?")
+
     if st.button("Generate Recipe"):
         try:
-            recipe = recipe_service.generate_recipe(user_data)
+            recipe = recipe_service.generate_recipe(user_data, user_prompt)
             st.success("Generated Recipe:")
             st.write(recipe)
         except:

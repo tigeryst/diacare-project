@@ -1,8 +1,7 @@
 from langchain_openai import ChatOpenAI
-import os
 
 
-def generate_recipe(user_data):
+def generate_recipe(user_data, user_prompt):
     llm = ChatOpenAI(
         model="gpt-4o",
         temperature=0.7,
@@ -19,6 +18,14 @@ def generate_recipe(user_data):
         (
             "user",
             f"Generate a diabetic-friendly recipe for a {user_data['age']}-year-old, {user_data['weight']} kg, {user_data['height']} cm person from {user_data['nationality']} who prefers {user_data['food_preferences']}. Summarize the user profile in your response.",
+        ),
+        (
+            "assistant",
+            "Alright! What kind of food do you want to have today?",
+        ),
+        (
+            "user",
+            user_prompt,
         ),
     ]
     try:
