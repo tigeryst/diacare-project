@@ -1,0 +1,8 @@
+Username: anna1
+Email: anna1@gmail.com
+Name: Anna
+Age: 20
+Weight: 60
+Height: 168
+Sex: Female
+Password: a73116441eace5e8ecbcd4dcc8d06f1f3d6e1ff25d655be6888f8f4822b3ece9

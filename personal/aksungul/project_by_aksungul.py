@@ -13,15 +13,13 @@ load_dotenv()
 # Set your OpenAI API key
 openai.api_key = os.getenv("OPEN_API_KEY")
 
-image_recognition_api_url = os.getenv("IMAGE_RECOGNITION_API_URL")  # Replace with actual API endpoint
+# Set your Image Recognition API details
+image_recognition_api_url = "https://api.your-service.com/recognize"  # Replace with actual API endpoint
 image_recognition_api_key = os.getenv("IMAGE_RECOGNITION_API_KEY")  # Add this to your .env file
-
-
 
 # Function to get hashed password
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
-
 
 # Function to check login credentials
 def check_credentials(username, password):
@@ -29,10 +27,9 @@ def check_credentials(username, password):
     if os.path.exists(f"user_profiles/{username}.txt"):
         with open(f"user_profiles/{username}.txt", "r") as file:
             lines = file.readlines()
-            stored_hashed_password = lines[1].strip().split(": ")[1]
+            stored_hashed_password = lines[-1].strip().split(": ")[1]
             return hashed_password == stored_hashed_password
     return False
-
 
 # Function to get meal recipe
 def get_meal_recipe(
@@ -58,7 +55,7 @@ def get_meal_recipe(
 
     # Make the API call using the latest model
     response = openai.ChatCompletion.create(
-        model="gpt-4",  # or "gpt-4" if you have access
+        model="gpt-3.5-turbo",  # or "gpt-4" if you have access
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt},
@@ -69,7 +66,6 @@ def get_meal_recipe(
     # Extract and return the response text
     return response.choices[0].message["content"].strip()
 
-
 # Function to calculate BMR
 def calculate_bmr(weight, height, age, sex):
     if sex == "Male":
@@ -77,7 +73,6 @@ def calculate_bmr(weight, height, age, sex):
     else:
         bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
     return bmr
-
 
 # Function to calculate daily calorie needs
 def calculate_daily_calorie_needs(bmr, activity_level):
@@ -89,7 +84,6 @@ def calculate_daily_calorie_needs(bmr, activity_level):
         "Super active (very hard exercise/sports & physical job or 2x training)": 1.9,
     }
     return bmr * activity_multiplier[activity_level]
-
 
 # Function to get ingredients from image
 def get_ingredients_from_image(image):
@@ -109,12 +103,10 @@ def get_ingredients_from_image(image):
         st.error(f"Error connecting to the image recognition service: {e}")
         return []
 
-
 # Main app function
 def main():
     st.title("DiaCare - *your assistant in the fight against diabetes!*")
 
-    # Page selection
     page = st.sidebar.selectbox(
         "Select a page:", ["Register", "Login", "Generate Recipe"]
     )
@@ -154,26 +146,20 @@ def main():
 
             username = st.session_state["username"]
 
-            with open(f"user_profiles/{username}.txt", "r") as file:
-                profile_data = json.load(file)
-                print(profile_data)
-                print("Test age", profile_data["age"])
-                # read json from text file
-                # lines = file.readlines()
-                # name = lines[0].strip().split(": ")[1]
+            profile_data = {}
+            try:
+                if os.path.exists(f"user_profiles/{username}.txt"):
+                    with open(f"user_profiles/{username}.txt", "r") as file:
+                        profile_data = json.load(file)
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                st.error(f"Error reading profile data: {str(e)}")
 
-            # User profile input
-            name = st.text_input("**Name:**")
-            age = st.number_input("**Age:**", min_value=0, max_value=120, value=10)
-            sex = st.selectbox("**Sex:**", ["Male", "Female"])
-            height = st.number_input(
-                "**Height (cm):**", min_value=0, max_value=300, value=150
-            )
-            weight = st.number_input(
-                "**Weight (kg):**", min_value=0, max_value=300, value=50
-            )
+            name = st.text_input("**Name:**", value=profile_data.get("name", ""))
+            age = st.number_input("**Age:**", min_value=0, max_value=120, value=profile_data.get("age", 10))
+            sex = st.selectbox("**Sex:**", ["Male", "Female"], index=["Male", "Female"].index(profile_data.get("sex", "Male")))
+            height = st.number_input("**Height (cm):**", min_value=0, max_value=300, value=profile_data.get("height", 150))
+            weight = st.number_input("**Weight (kg):**", min_value=0, max_value=300, value=profile_data.get("weight", 50))
 
-            # Daily activity level input
             activity_level = st.selectbox(
                 "**Daily Activity Level:**",
                 [
@@ -185,7 +171,6 @@ def main():
                 ],
             )
 
-            # Additional user preferences
             food_preference = st.text_input(
                 "**Food Preference:** (e.g., vegan, vegetarian, gluten-free)"
             )
@@ -197,7 +182,6 @@ def main():
                 "**Meal Category:** (e.g., breakfast, lunch, dinner)"
             )
 
-            # Image upload for ingredient recognition
             uploaded_file = st.file_uploader(
                 "**Upload an image of ingredients:**", type=["jpg", "jpeg", "png"]
             )
@@ -207,7 +191,6 @@ def main():
                 st.image(image, caption="Uploaded Ingredients", use_column_width=True)
                 ingredients = get_ingredients_from_image(image)
 
-            # Store input in local text file
             if st.button("Save Profile"):
                 profile_data = {
                     "username": st.session_state["username"],
@@ -217,31 +200,13 @@ def main():
                     "height": height,
                     "weight": weight,
                 }
-                json.dump(
-                    profile_data,
-                    open(f"user_profiles/{st.session_state['username']}.txt", "w"),
-                )
-                # Save profile data as json to text file
-                # with open(
-                #     f"user_profiles/{st.session_state['username']}.txt", "w"
-                # ) as file:
-                #     file.write(profile_data)
-                # # profile_data = (
-                # #     f"{datetime.now()}\nName: {name}\nAge: {age}\nSex: {sex}\nHeight: {height}\nWeight: {weight}\n"
-                # #     f"Activity Level: {activity_level}\nFood Preference: {food_preference}\nNationality: {nationality}\n"
-                # #     f"Cuisine: {cuisine}\nCategory: {category}\n\n"
-                # # )
-                # with open(
-                #     f"user_profiles/{st.session_state['username']}.txt", "a"
-                # ) as file:
-                #     file.write(profile_data)
+                with open(f"user_profiles/{st.session_state['username']}.txt", "w") as file:
+                    json.dump(profile_data, file)
                 st.success("***Profile saved successfully!***")
 
-            # Calculate BMR and daily calorie needs
             bmr = calculate_bmr(weight, height, age, sex)
             daily_calorie_needs = calculate_daily_calorie_needs(bmr, activity_level)
 
-            # Display BMR and daily calorie needs
             st.header("Results")
             st.write(f"Estimated BMR: {bmr:.2f} calories/day")
             st.write(
@@ -272,13 +237,14 @@ def main():
                     "path_to_image_of_recipe.jpg",
                     caption="Recipe Image",
                     use_column_width=True,
-                )  # Placeholder image path
+                )
                 st.image(
                     "path_to_image_of_cooking_process.jpg",
                     caption="Cooking Process",
                     use_column_width=True,
-                )  # Placeholder image path
-
+                )
 
 if __name__ == "__main__":
     main()
+
+

@@ -22,14 +22,8 @@ def check_credentials(username, password):
     if os.path.exists(user_file):
         with open(user_file, "r") as file:
             lines = file.readlines()
-            # Print file content for debugging
-            print("File contents for user:", username)
             print(lines)
-            if len(lines) < 6:
-                return False
-            
-            # Read the hashed password from the file
-            stored_hashed_password = lines[6].strip().split(": ")[1]
+            stored_hashed_password = lines[-1].strip().split(": ")[1]
             return hashed_password == stored_hashed_password
     return False
 
@@ -132,9 +126,11 @@ def main():
                     lines = file.readlines()
                     for line in lines:
                         if line.startswith("Name:"):
-                            st.session_state["profile"]["name"] = line.strip().split(": ")[1]
+                            print("here is line")
+                            print(line)
+                            st.session_state["profile"]["name"] = line[2].strip().split(": ")[1]
                         elif line.startswith("Age:"):
-                            st.session_state["profile"]["age"] = int(line.strip().split(": ")[1])
+                            st.session_state["profile"]["age"] = int(line[3].strip().split(": ")[1])
             else:
                 st.error("Invalid username or password.")
 
@@ -151,8 +147,6 @@ def main():
             st.write(f"**Age:** {profile.get('age', '')}")
 
             # User profile input
-            name = st.text_input("**Name:**", value="")
-            age = st.number_input("**Age:**", min_value=0, max_value=120, value=0)
             sex = st.selectbox("**Sex:**", ["Male", "Female"], index=0)
             height = st.number_input("**Height (cm):**", min_value=0, max_value=300, value=150)
             weight = st.number_input("**Weight (kg):**", min_value=0, max_value=300, value=50)
@@ -176,7 +170,7 @@ def main():
             # Store input in local text file
             if st.button("Save Profile"):
                 profile_data = (
-                    f"{datetime.now()}\nName: {name}\nAge: {age}\nSex: {sex}\nHeight: {height}\nWeight: {weight}\n"
+                    f"{datetime.now()}\nSex: {sex}\nHeight: {height}\nWeight: {weight}\n"
                     f"Activity Level: {activity_level}\nFood Preference: {food_preference}\nNationality: {nationality}\n"
                     f"Cuisine: {cuisine}\nCategory: {category}\nIngredients: {ingredients}\n\n"
                 )
@@ -185,7 +179,7 @@ def main():
                 st.success("***Profile saved successfully!***")
                 
             # Calculate BMR and daily calorie needs
-            bmr = calculate_bmr(weight, height, age, sex)
+            bmr = calculate_bmr(weight, height, profile.get('age', 0), sex)
             daily_calorie_needs = calculate_daily_calorie_needs(bmr, activity_level)
             
             # Display BMR and daily calorie needs
@@ -197,10 +191,8 @@ def main():
             if st.button("Generate Recipe"):
                 if profile:
                     meal_recipe = get_meal_recipe(profile, daily_calorie_needs, food_preference, nationality, cuisine, category, ingredients)
-                    st.write("**Recommended Recipe:**")
-                    st.write(meal_recipe)
-                else:
-                    st.error("Profile information is missing.")
-                
+                    st.write("**Generated Recipe:**")
+                st.write(recipe)
+
 if __name__ == "__main__":
     main()

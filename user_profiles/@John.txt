@@ -1,0 +1,8 @@
+Username: @John
+Email: john1@gmail.com
+Name: John
+Age: 25
+Weight: 180
+Height: 85
+Sex: Male
+Password: 96d9632f363564cc3032521409cf22a852f2032eec099ed5967c0d000cec607a

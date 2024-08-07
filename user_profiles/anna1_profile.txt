@@ -1,0 +1,16 @@
+2024-08-05 14:37:51.135271
+Activity Level: Sedentary (little or no exercise)
+Food Preference: vegetarian
+Nationality: American
+Cuisine: Italian
+Category: Dinner
+Ingredients: Tomato, potato, onions, noodles, lettuce, cucumbers, carrot
+
+2024-08-05 15:06:25.101566
+Activity Level: Lightly active (light exercise/sports 1-3 days/week)
+Food Preference: vegetarian
+Nationality: Italian
+Cuisine: Russian
+Category: lunch
+Ingredients: tomato, potato, lettuce, noodles, pasta, onions , garlic, oil, carrots, cucumbers
+

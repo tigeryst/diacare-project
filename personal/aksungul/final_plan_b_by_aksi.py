@@ -22,15 +22,10 @@ def check_credentials(username, password):
     if os.path.exists(user_file):
         with open(user_file, "r") as file:
             lines = file.readlines()
-            # Print file content for debugging
-            print("File contents for user:", username)
-            print(lines)
-            if len(lines) < 6:
-                return False
-            
-            # Read the hashed password from the file
-            stored_hashed_password = lines[6].strip().split(": ")[1]
-            return hashed_password == stored_hashed_password
+            for line in lines:
+                if line.startswith("Password:"):
+                    stored_hashed_password = line.strip().split(": ")[1]
+                    return hashed_password == stored_hashed_password
     return False
 
 # Function to get meal recipe
@@ -83,6 +78,24 @@ def calculate_daily_calorie_needs(bmr, activity_level):
 def main():
     st.set_page_config(page_title="DiaCare", layout="wide")
     
+    # Custom CSS for styling
+    st.markdown(
+        """
+        <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: black;
+        }
+        .stTextInput > div > input, .stNumberInput > div > input, .stSelectbox > div > select, .stTextArea > div > textarea {
+            border: 2px solid black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
     st.title("DiaCare - *Your Assistant in the Fight Against Diabetes!*")
     
     # Page navigation
@@ -131,10 +144,19 @@ def main():
                 with open(f"user_profiles/{username}.txt", "r") as file:
                     lines = file.readlines()
                     for line in lines:
-                        if line.startswith("Name:"):
-                            st.session_state["profile"]["name"] = line.strip().split(": ")[1]
-                        elif line.startswith("Age:"):
-                            st.session_state["profile"]["age"] = int(line.strip().split(": ")[1])
+                        parts = line.strip().split(": ")
+                        if len(parts) == 2:
+                            key, value = parts
+                            if key == "Name":
+                                st.session_state["profile"]["name"] = value
+                            elif key == "Age":
+                                st.session_state["profile"]["age"] = int(value)
+                            elif key == "Sex":
+                                st.session_state["profile"]["sex"] = value
+                            elif key == "Height":
+                                st.session_state["profile"]["height"] = int(value)
+                            elif key == "Weight":
+                                st.session_state["profile"]["weight"] = int(value)
             else:
                 st.error("Invalid username or password.")
 
@@ -149,13 +171,9 @@ def main():
             st.write("**Profile Details:**")
             st.write(f"**Name:** {profile.get('name', '')}")
             st.write(f"**Age:** {profile.get('age', '')}")
-
-            # User profile input
-            name = st.text_input("**Name:**", value="")
-            age = st.number_input("**Age:**", min_value=0, max_value=120, value=0)
-            sex = st.selectbox("**Sex:**", ["Male", "Female"], index=0)
-            height = st.number_input("**Height (cm):**", min_value=0, max_value=300, value=150)
-            weight = st.number_input("**Weight (kg):**", min_value=0, max_value=300, value=50)
+            st.write(f"**Sex:** {profile.get('sex', '')}")
+            st.write(f"**Height (cm):** {profile.get('height', '')}")
+            st.write(f"**Weight (kg):** {profile.get('weight', '')}")
             
             # Daily activity level input
             activity_level = st.selectbox("**Daily Activity Level:**", [
@@ -172,35 +190,29 @@ def main():
             cuisine = st.text_input("**Cuisine Preference:** (e.g., Italian, Chinese, Indian)")
             category = st.text_input("**Meal Category:** (e.g., breakfast, lunch, dinner)")
             ingredients = st.text_area("**Available Ingredients:** (e.g., tomato, lettuce, cucumber)")
+            
+            # Calculate BMR and daily calorie needs
+            bmr = calculate_bmr(profile.get("weight", 50), profile.get("height", 150), profile.get("age", 25), profile.get("sex", "Male"))
+            calorie_needs = calculate_daily_calorie_needs(bmr, activity_level)
+            
+            st.write(f"**BMR:** {bmr}")
+            st.write(f"**Daily Calorie Needs:** {calorie_needs}")
 
             # Store input in local text file
             if st.button("Save Profile"):
                 profile_data = (
-                    f"{datetime.now()}\nName: {name}\nAge: {age}\nSex: {sex}\nHeight: {height}\nWeight: {weight}\n"
-                    f"Activity Level: {activity_level}\nFood Preference: {food_preference}\nNationality: {nationality}\n"
+                    f"{datetime.now()}\nActivity Level: {activity_level}\nFood Preference: {food_preference}\nNationality: {nationality}\n"
                     f"Cuisine: {cuisine}\nCategory: {category}\nIngredients: {ingredients}\n\n"
                 )
-                with open(f"user_profiles/{st.session_state['username']}.txt", "a") as file:
+                with open(f"user_profiles/{st.session_state['username']}_profile.txt", "a") as file:
                     file.write(profile_data)
-                st.success("***Profile saved successfully!***")
-                
-            # Calculate BMR and daily calorie needs
-            bmr = calculate_bmr(weight, height, age, sex)
-            daily_calorie_needs = calculate_daily_calorie_needs(bmr, activity_level)
+                st.success("Profile saved successfully!")
             
-            # Display BMR and daily calorie needs
-            st.header("Results")
-            st.write(f"Estimated BMR: {bmr:.2f} calories/day")
-            st.write(f"Estimated Daily Calorie Needs: {daily_calorie_needs:.2f} calories/day")
-            
-            # Generate Recipe
             if st.button("Generate Recipe"):
-                if profile:
-                    meal_recipe = get_meal_recipe(profile, daily_calorie_needs, food_preference, nationality, cuisine, category, ingredients)
-                    st.write("**Recommended Recipe:**")
-                    st.write(meal_recipe)
-                else:
-                    st.error("Profile information is missing.")
-                
+                profile_str = ', '.join([f'{key}: {value}' for key, value in profile.items()])
+                recipe = get_meal_recipe(profile_str, calorie_needs, food_preference, nationality, cuisine, category, ingredients)
+                st.subheader("Generated Recipe")
+                st.write(recipe)
+
 if __name__ == "__main__":
     main()
