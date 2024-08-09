@@ -4,6 +4,7 @@ from datetime import datetime
 import openai
 from dotenv import load_dotenv
 import hashlib
+from custom_css import apply_custom_css
 
 load_dotenv()
 
@@ -28,7 +29,35 @@ def check_credentials(username, password):
                     return hashed_password == stored_hashed_password
     return False
 
-# Function to get meal recipe
+# # Function to get meal recipe
+# def get_meal_recipe(profile, calorie_needs, food_preference, nationality, cuisine, category, ingredients=None):
+#     # Define the prompt for the API
+#     prompt = (
+#         f"User profile: {profile}\n"
+#         f"Calorie needs: {calorie_needs}\n"
+#         f"Food preference: {food_preference}\n"
+#         f"Nationality: {nationality}\n"
+#         f"Cuisine: {cuisine}\n"
+#         f"Category: {category}\n"
+#         f"Ingredients: {ingredients}\n"
+#         "Diabetes requirements: tailored meal recipe for people with diabetes."
+#     )
+    
+#     # Make the API call using the latest model
+#     response = openai.openai.Chat.create(
+#         model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+#         messages=[
+#             {"role": "system", "content": "You are a helpful assistant."},
+#             {"role": "user", "content": prompt}
+#         ],
+#         max_tokens=300
+#     )
+    
+#     # Extract and return the response text
+#     return response.choices[0].message['content'].strip()
+
+
+# Function to get meal recipe using the correct API interface
 def get_meal_recipe(profile, calorie_needs, food_preference, nationality, cuisine, category, ingredients=None):
     # Define the prompt for the API
     prompt = (
@@ -42,7 +71,7 @@ def get_meal_recipe(profile, calorie_needs, food_preference, nationality, cuisin
         "Diabetes requirements: tailored meal recipe for people with diabetes."
     )
     
-    # Make the API call using the latest model
+    # Make the API call using the correct method
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",  # or "gpt-4" if you have access
         messages=[
@@ -53,7 +82,8 @@ def get_meal_recipe(profile, calorie_needs, food_preference, nationality, cuisin
     )
     
     # Extract and return the response text
-    return response.choices[0].message['content'].strip()
+    return response['choices'][0]['message']['content'].strip()
+
 
 # Function to calculate BMR
 def calculate_bmr(weight, height, age, sex):
@@ -77,27 +107,10 @@ def calculate_daily_calorie_needs(bmr, activity_level):
 # Main app function
 def main():
     st.set_page_config(page_title="DiaCare", layout="wide")
+    apply_custom_css()
     
-    # Custom CSS for styling
-    st.markdown(
-        """
-        <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            color: black;
-        }
-        .stTextInput > div > input, .stNumberInput > div > input, .stSelectbox > div > select, .stTextArea > div > textarea {
-            border: 2px solid black;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    st.title("DiaCare - *Your Assistant in the Fight Against Diabetes!*")
-    
+    # Double-check this title update
+    st.markdown('<h1 class="custom-title">DiaCare - A Diabetes Management Application</h1>', unsafe_allow_html=True)    
     # Page navigation
     st.sidebar.header("Navigate")
     page = st.sidebar.selectbox("Select a page:", ["Register", "Login", "Generate Recipe"])
